@@ -1,13 +1,12 @@
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Avatar } from '@mui/material';
 import React, { useContext } from 'react'
-import { setChannelInfo } from '../features/appSlice';
-import { editProfile } from '../features/userSlice';
 import "./styles/SideBarRight.css";
 
 const SideBarRight = ({ userContext, channelContext}) => {
     const { dispatch, editProfile, user, notEditProfile, logout } = useContext(userContext);
-    const { setChannelInfo, notNewChannel, channels, setChannels, userChannels, setUserChannels} = useContext(channelContext);
+    const { setChannelInfo, notNewChannel, channelId, channelName, description, imageUrl, channels, setChannels, userChannels, setUserChannels} = useContext(channelContext);
+    
 
     const handleEditProfile = () => {
         dispatch(
@@ -19,6 +18,7 @@ const SideBarRight = ({ userContext, channelContext}) => {
                 channelName: null,
                 description: null,
                 newChannel: false,
+                editChannel: false,
                 searchChannel: false,
             }),
         )
@@ -36,15 +36,18 @@ const SideBarRight = ({ userContext, channelContext}) => {
             <SettingsIcon onClick={handleEditProfile}/>
             </div>
         </div>
-        <div className="sidebar__channels">
-            <div className="sidebar__channels-header">
-                <div className="sidebar__header">
-                    <h5>List of channels:</h5>
+        {channelName&&(
+            <div className="sidebar__channel">
+                <Avatar src={imageUrl} sx={{ width: 200, height: 200 }} />
+                <div className="sidebar__channel-info">
+                    <h5>{channelName&&channelName}</h5>
+                    <div className="sidebar__channel-info__description">
+                        {description&&description}
+                    </div>
                 </div>
             </div>
-            <div className="sidebar__channelist">
-            </div>
-        </div>
+        )}
+
         </div>
     )
 }

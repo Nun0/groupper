@@ -1,9 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { collection, doc, getDoc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import "firebase/firestore";
 import { useEffect } from "react";
-import { login } from "./features/userSlice";
+import { login, logout } from "./features/userSlice";
 import { useDispatch } from "react-redux";
 import { getStorage } from "firebase/storage";
 
@@ -25,6 +25,7 @@ provider.setCustomParameters({
     prompt: 'select_account'
 });
 
+
 // custom hook
 export function useAuth(){
     const dispatch = useDispatch();
@@ -43,6 +44,8 @@ export function useAuth(){
         return unsub;
     })
     },[dispatch])
+
+    
 }
 
 async function verify(u){
@@ -50,19 +53,23 @@ async function verify(u){
     const userRef = doc(usersCollection, u.uid);
     const uRef = await getDoc(userRef)
     if(uRef.data()){
-        updateDoc(userRef, {status: 'online', role: 'user'})
-        const userSnap =  getDoc(userRef);
-        if(!userSnap.hasOwnProperty('blacklisted')){ updateDoc(userRef, {blacklisted: false}) }
-        else if (userSnap.valueOf('blacklisted') === true){ signOut(auth)}
-    }else {
-        setDoc(userRef, {status: 'online', role: 'user', blacklisted: false})
+        updateDoc(userRef, {displayName: u.displayName, photo:u.photoURL, status: 'online'})
+        const userSnap =  await getDoc(userRef);
+        const userData = userSnap.data();
+        if(userData.blacklisted === true){
+            console.log(userSnap.blacklisted);
+        } else {
+            updateDoc(userRef, {blacklisted: false}) 
+        }
+    } else {
+        setDoc(userRef, {displayName: u.displayName, photo:u.photoURL, status: 'online', role: 'user'})
     }
 }
 
 export async function signup(){
     await signInWithPopup(auth, provider)
-            .then((result) => {
-                verify(result.user);
+            .then(async (result) => {
+                await verify(result.user);
             }).catch((error) => {
                 console.log(error);
             });
@@ -74,5 +81,5 @@ export async function signout(auth){
 
 const storage = getStorage(firebase);
 
-export { auth, provider, storage};
+export { auth, provider, storage, updateProfile};
 export default db;

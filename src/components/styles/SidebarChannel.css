@@ -1,9 +1,12 @@
-.sidebar-channel:hover > h4{
-    color: white;
-    background-color:rgb(17, 17, 17);
+.sidebar-channel{
+    display: flex;
+}
+.sidebar-channel:hover .channel-buttons{
+    visibility: visible;
+    cursor: pointer;
 }
 
-.sidebar-channel > h5{
+.sidebar-channel > .channel-title{
     display: flex;
     padding-left: 15px;
     align-items: center;
@@ -18,3 +21,14 @@
     color: #ffa900;
 }
 
+.channel-buttons{
+    visibility: hidden;
+}
+
+.edit__channel{
+    color: #119DA4;
+}
+
+.delete__channel{
+    color: rgb(233, 46, 46);
+}

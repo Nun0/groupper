@@ -1,0 +1,27 @@
+
+.card{
+    box-shadow:0px 4px 15px 1px #0000007a;
+    min-height: 350px;
+    max-height:350px;
+    height: 350px;
+}
+
+.card-text {
+    /* height: 0; */
+    overflow: hidden;
+}
+
+.card-img{
+    height: 50%;
+}
+
+.card:hover .card-img {
+    height: 10vh;
+    object-fit:cover;
+    object-position: 50% 75%;
+    transition:all .2s ease;
+}
+
+.card-button:hover{
+    cursor: pointer;
+}

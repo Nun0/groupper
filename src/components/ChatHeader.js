@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import './styles/ChatHeader.css'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { useDispatch } from 'react-redux';
-import { newChannel, searchingChannel } from '../features/appSlice';
+import { newChannel, searchingChannel, setChannelInfo } from '../features/appSlice';
 import { notEditProfile } from '../features/userSlice';
 import { collection, getDocs, orderBy, query, where } from '@firebase/firestore';
 import db from '../firebase';
@@ -47,7 +47,6 @@ const ChatHeader = ({  channelContext }) => {
                     id: doc.id,
                 }]);
             });
-            console.log(searchChannel)
         }else if(searchChannel.length === 0) {
             setSearchChannel([...searchChannel, ...channels]);
         } 
@@ -56,10 +55,10 @@ const ChatHeader = ({  channelContext }) => {
 
     const handleNewChannel = () => {
         dispatch(
-            newChannel()
-        )
-        dispatch(
             notEditProfile()
+            )
+        dispatch(
+            newChannel()
         )
     };
 
@@ -72,13 +71,6 @@ const ChatHeader = ({  channelContext }) => {
                         {channelName}
                         {bracketright(channelName)}
                     </h3>
-                    {description && (
-                        <>
-                            <h5>about this group:</h5>
-                            <p>{description}</p>
-                        </>
-                        )}
-                    
                 </div>
                 <div className="chat-header_right">
                     
@@ -87,7 +79,7 @@ const ChatHeader = ({  channelContext }) => {
                         <input placeholder="Search" name="search" onChange={handleSearch} className='search'/><button hidden type="submit" onClick={handleClickSearch}></button>
                     </form>
                     <div className="chat-header__addchannel">
-                        <button onClick={handleNewChannel}>New Channel</button>
+                        <button onClick={handleNewChannel}>New Group +</button>
                     </div>
                 </div>
             </div>

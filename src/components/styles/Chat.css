@@ -107,6 +107,9 @@ label{
 .file-upload > .avatar {
     margin-left: 60px;
 }
+.file-upload > .channel-form-avatar{
+    margin-left: 120px;
+}
 
 
 /* 

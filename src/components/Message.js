@@ -14,7 +14,6 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import isURL from 'validator/lib/isURL'
 
-
 const Message = ({ timestamp, message, userPhoto, userName, userId, messageId, showInfo}) => {
     const [messageEditable, setMessageEditable] = useState(false);
     const [editMessage, setEditMessage] = useState(false);
@@ -137,9 +136,11 @@ const Message = ({ timestamp, message, userPhoto, userName, userId, messageId, s
                 <div ref={messagesEndRef}/>
             </div>
         )}
-        {/* {isURL(message.message)(
-            
-        )} */}
+        {isURL(message.message)&&(
+            <div className="image-container">
+                <img src="message.message" alt="image" id="image-message"/>
+            </div>
+        )}
         </>
     )
 }

@@ -4,23 +4,22 @@ import { addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp, s
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import GifIcon from '@mui/icons-material/Gif';
-import { notEditProfile } from '../features/userSlice'
-import db, { storage } from '../firebase';
+import { login, notEditProfile } from '../features/userSlice'
+import db, { storage} from '../firebase';
+import { getAuth, updateProfile } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import ChatHeader from './ChatHeader'
 import Message from './Message';
 import { v4 } from 'uuid';
-// import "bootstrap/dist/css/bootstrap.min.css";
 import './styles/Chat.css'
 import NewChannelForm from './NewChannelForm';
 import EditProfileForm from './EditProfileForm';
 import ChannelCard from './ChannelCard';
-import Modal from 'react-overlays/Modal'
 
 const  Chat = ({ userContext, channelContext }) => {
     
     const { dispatch, editProfile, user, editingProfile } = useContext(userContext)
-    const { channelId, channelName, isSearchChannel, searchChannel, setSearchChannel, description, newChannel, setChannelInfo, channels} = useContext(channelContext)
+    const { channelId, isSearchChannel, searchChannel, setSearchChannel, newChannel, setChannelInfo, channels} = useContext(channelContext)
     
     const [input, setInput] = useState('');
     const [inputImage, setInputImage] = useState('');
@@ -31,15 +30,53 @@ const  Chat = ({ userContext, channelContext }) => {
 
     const editProfileInitialValues = {
         displayName: user.displayName,
-        photo: ''
     }
 
     useEffect(()=>{
         setSearchChannel([...searchChannel, ...channels]);
     },[])
 
-    const handleEditProfile = async (values)=> {
-        console.log(values);
+    const handleSubmitUser = async (values) => {
+        const auth = getAuth();
+        if(image){
+            const imageRef = ref(storage, `channels/${image.name + v4()}`)
+            uploadBytes(imageRef, image)
+                .then(async () => {
+                    let URL = await getDownloadURL(imageRef);
+                    const userRef = doc(db, 'users', user.uid)
+                    updateDoc(userRef, {displayName: values.displayName, photo: URL})
+                    updateProfile(auth.currentUser, {
+                        displayName: values.displayName, photoURL: URL
+                    }).then(()=>{
+                        console.log('Profile updated successfully');
+                        dispatch(
+                            login({
+                                uid: user.uid,
+                                photo: URL,
+                                email: user.email,
+                                displayName: values.displayName
+                            })
+                        );
+                    }).catch((error) => {console.log(error)});
+            })
+        }else {
+            if(values.displayName !== user.displayName){
+                const userRef = doc(db, 'users', user.uid)
+                updateDoc(userRef, {displayName: values.displayName})
+                updateProfile(auth.currentUser, {displayName: values.displayName})
+                .then(()=>{
+                    console.log('Profile updated successfully');
+                    dispatch(
+                        login({
+                            uid: user.uid,
+                            photo: user.photo,
+                            email: user.email,
+                            displayName: values.displayName
+                        })
+                    );
+                }).catch((error) => {console.log(error)});
+            }
+        }
         dispatch(
             notEditProfile()
         )
@@ -49,34 +86,54 @@ const  Chat = ({ userContext, channelContext }) => {
         const channelsCollection = collection(db, 'channels');
         if(image){
             const imageRef = ref(storage, `channels/${image.name + v4()}`)
-            uploadBytes(imageRef, image).then(() => {
-                getDownloadURL(imageRef).then((URL) => {
-                    setUrl(URL);
-                    console.log(url);
-                    setImage('');
-                })
+            uploadBytes(imageRef, image)
+            .then(async () => {
+                let URL = await getDownloadURL(imageRef);
+                await addDoc(channelsCollection, ({
+                    channelName: values.channelName,
+                    description: values.description,
+                    imageUrl: URL
+                })).then((res)=>{
+                    const userRef = doc( db, 'users', user.uid)
+                    const channelsCol = collection(userRef, 'channels');
+                    const channelRef = doc(channelsCol, res.id)
+                    setDoc(channelRef, { role: 'owner' });
+                    setUrl('');
+                    dispatch(
+                        setChannelInfo({
+                            searchChannel: false,
+                            newChannel:false,
+                            editChannel:false,
+                            channelName:res.channelName,
+                            channelId:res.channelId,
+                            description:res.description,
+                            imageUrl:res.imageUrl
+                    }))
+                }).catch((e) => {console.log(e)})
             })
-        }
-        await addDoc(channelsCollection, ({
-            channelName: values.channelName,
-            description: values.description,
-            imageUrl: url
-        })).then((res)=>{
-            const userRef = doc( db, 'users', user.uid)
-            const channelsCol = collection(userRef, 'channels');
-            const channelRef = doc(channelsCol, res.id)
-            setDoc(channelRef, { role: 'owner' });
-            setUrl('');
-            dispatch(
-                setChannelInfo({
-                    searchChannel: false,
-                    newChannel:false,
-                    channelName:res.channelName,
-                    channelId:res.channelId,
-                    description:res.description,
-                    imageUrl:res.imageUrl
+        } else {
+            await addDoc(channelsCollection, ({
+                channelName: values.channelName,
+                description: values.description,
+                imageUrl: url
+            })).then((res)=>{
+                const userRef = doc( db, 'users', user.uid)
+                const channelsCol = collection(userRef, 'channels');
+                const channelRef = doc(channelsCol, res.id)
+                setDoc(channelRef, { role: 'owner' });
+                setUrl('');
+                dispatch(
+                    setChannelInfo({
+                        searchChannel: false,
+                        newChannel:false,
+                        editChannel:false,
+                        channelName:res.channelName,
+                        channelId:res.channelId,
+                        description:res.description,
+                        imageUrl:res.imageUrl
                 }))
-            })
+            }).catch((e) => {console.log(e)})
+        }
     }
 
     const sendMessage = async (e) => {
@@ -88,7 +145,7 @@ const  Chat = ({ userContext, channelContext }) => {
                 timestamp: new serverTimestamp(),
                 message: input,
                 user: user,
-            }))
+            })).catch((e) => {console.log(e)})
         }
         setInput('');
     }
@@ -152,19 +209,19 @@ const  Chat = ({ userContext, channelContext }) => {
                             userName={message.sender.displayName}
                             userId={message.sender.uid}
                         />
-                    
                 })}
                 <div>
                 {newChannel && (
                         <NewChannelForm handleSubmit={handleSubmit} setImage={setImage}/>)}
                 {editingProfile && 
                     (<EditProfileForm 
-                        handleSubmit={handleEditProfile} 
+                        handleSubmitUser={handleSubmitUser} 
                         editProfileInitialValues={editProfileInitialValues}
                         photo={photo}
+                        setImage={setImage}
                     />)}
                 <div className="container">
-                    <div className="row justify-content-center">
+                    <div className="row justify-content-start">
                         {isSearchChannel && (
                             searchChannel?.map(({ channel, id}) => (
                                 <ChannelCard
@@ -183,7 +240,6 @@ const  Chat = ({ userContext, channelContext }) => {
             </div>
             <div className="chat__input">
                 <span><AddCircleIcon fontSize="medium" /></span>
-                
                 <form>
                     <input 
                         value={input}

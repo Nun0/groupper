@@ -1,6 +1,8 @@
 import React from 'react';
 import {Formik, Field, Form, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
+import { useState } from 'react';
+import { Avatar } from '@mui/material';
 
 const newChannelSchema = Yup.object().shape({
     channelName: Yup.string()
@@ -19,9 +21,17 @@ const newChannelInitialValues = {
 };
 
 const NewChannelForm = ({ handleSubmit, setImage }) => {
+    const [photoPreview, setPhotoPreview] = useState();
+
+    const handlePhotoChange = (e) => {
+        let src = URL.createObjectURL(e.target.files[0]);
+        setPhotoPreview(src);
+        setImage(e.target.files[0]);
+    }
+
 return(
     <div className="col-md-6 offset-md-3 pt-3">
-        <h1 className="text-center form-title">Create a New Channel</h1>
+        <h1 className="text-center form-title">Create a New Group</h1>
         <Formik
             initialValues={newChannelInitialValues}
             validationSchema={newChannelSchema}
@@ -29,9 +39,33 @@ return(
         >
             {({ resetForm }) => (
                 <Form noValidate>
+                    <div className="file-upload mt-4">
+                            <div className="form-group">
+                                <label htmlFor="description">
+                                    Upload Group Picture:
+                                </label>
+                                <Field
+                                    type="file"
+                                    id="photo"
+                                    name="photo"
+                                    className="form-input form-control"
+                                    onChange={handlePhotoChange}
+                                />
+                                <ErrorMessage
+                                    name="photo"
+                                    component="small"
+                                    className="text-danger"
+                                />
+                            </div>
+                            <div className="channel-form-avatar">
+                                <Avatar 
+                                src={photoPreview} referrerPolicy="no-referrer" sx={{ width: 150, height: 150 }}
+                            />
+                            </div>
+                    </div>
                     <div className="form-group mb-3">
                         <label htmlFor="channelName">
-                            Channel Name:
+                            Group Name:
                         </label>
                         <Field
                             type="text"
@@ -61,32 +95,13 @@ return(
                             className="text-danger"
                         />
                     </div>
-                    <div className="file-upload">
-                            <div className="form-group mb-3">
-                                <label htmlFor="description">
-                                    Upload Group Picture:
-                                </label>
-                                <Field
-                                    type="file"
-                                    id="photo"
-                                    name="photo"
-                                    className="form-input form-control"
-                                    onChange={(e) => {setImage(e.target.files[0])}}
-                                />
-                                <ErrorMessage
-                                    name="photo"
-                                    component="small"
-                                    className="text-danger"
-                                />
-                            </div>
-                    </div>
                     <div className="form-group gap-3 d-flex">
                         <button
                             type="submit"
                             className="btn btn-primary"
                             id="edit"
                         >
-                            New Channel
+                            New Group
                         </button>
                         <button
                             type="button"
