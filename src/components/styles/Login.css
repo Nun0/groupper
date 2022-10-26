@@ -1,0 +1,52 @@
+.login{
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    width: 100%;
+    background-image: url('../assets/home.png');
+    background-size:cover;
+}
+
+.login__wrapper {
+    /* border: 1px solid #119DA4; */
+    height: 20rem;
+    width: 15rem;
+    display: flex;
+    flex-direction: column;
+    color: aliceblue;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 15px;
+    background-color: rgb(0, 0, 0);
+    box-shadow: 0 4px 8px 0 rgba(7, 247, 235, 0.398);
+    transition: 0.3s;
+}
+
+.login__wrapper:hover{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.login__wrapper > button {
+    background-color: #119DA4;
+    color: #050606;
+    font-weight: 800;
+}
+
+.login__wrapper > button:hover {
+    background-color: rgb(0, 0, 0);
+    color: #119DA4;
+    border: #119DA4 1px solid;
+}
+
+.login__logo > h1,.login__wrapper > p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: aliceblue;
+    /* text-transform: uppercase; */
+}
+
+
+.login__wrapper:hover .login:not(:hover) {
+    filter: blur(2px);
+}

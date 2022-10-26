@@ -1,0 +1,188 @@
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #ffa900 #000000;
+}
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 12px;
+}
+
+  *::-webkit-scrollbar-track {
+    background: #1d1d1d;
+}
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #ffa900;
+    border-radius: 10px;
+    border: 0px groove #ffa900;
+}
+
+/* chat */
+.chat{
+    display: flex;
+    flex-direction: column;
+    flex: 0.80;
+    background-color: #1d1d1d;
+    height: 100vh;
+    max-height: 100vh;
+    /* border-left: 1px solid #119DA4; */
+}
+
+.chat__input{
+    color: #989898;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    margin: 20px;
+    margin-top: 0;
+    padding-left: 5px;
+    background-color: #151515;
+}
+
+.chat__input > form > input {
+    padding: 15px;
+    background: transparent;
+    border: none;
+    outline-width: 0;
+    color: white;
+    font-size: large;
+    width: 100%;
+}
+
+.chat__input > form > input::placeholder{
+    color: #989898;
+}
+
+.chat__input > form {
+    flex: 1;
+}
+
+.chat__input-button {
+    display: none;
+}
+
+.chat__input-icons > .MuiSvgIcon-root {
+    padding: 10px;
+}
+
+.chat__messages {
+    flex:1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 100%;
+}
+
+.form-title {
+    color: #119DA4;
+}
+
+label{
+    color:#ffa900;
+}
+
+.form-group > .form-input{
+    background: transparent;
+    border: #ffa900 1px solid;
+    color: white;
+}
+
+.form-group > .form-input:focus {
+    background-color: transparent;
+    background: transparent;
+    border: #ffa900 1px solid;
+    box-shadow: 0 0 8px #ffa900;
+    color: white;
+}
+
+.file-upload{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.file-upload > .avatar {
+    margin-left: 60px;
+}
+
+
+/* 
+.card-container > .flex > .card {
+    padding: 10px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    flex: 1 1;
+    width: 200px;
+    display: flex;
+    background: #000000;
+    color: #ffffff;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+} 
+
+.card-container > .flex > .card >.card-content{
+    max-height: fit-content;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-self: start;
+    align-items: space-between;
+}
+.card-container > .flex > .card > .card-img{
+    flex: 1;
+    max-height: 100px;
+    height: 100px;
+}
+
+.card-container > .flex > .card > .card-content > .card-text {
+    height: 0;
+    text-align: justify;
+}
+
+.card-container > .flex > .card > .card-button{
+    justify-content: end;
+    background-color: rgb(0, 0, 0);
+    border: 1px solid #119DA4;
+    color:#119DA4;
+    margin-top: 5px;
+}
+
+.card-container > .flex > .card > .card-button:hover{
+    color: #000000;
+    background-color: #119DA4;
+}
+
+.card-container > .flex > .card:hover > .card-content > .card-text{
+    height: fit-content;
+}  */
+
+#edit{
+    background-color: #1d1d1d;
+    outline-width: 0;
+    border: #119DA4 1px solid;
+    border-radius: 5px;
+    color: #119DA4;
+}
+
+#edit:hover {
+    color: #1d1d1d;
+    background-color: #119DA4;
+    cursor: pointer;
+}
+
+#cancel{
+    background-color: #1d1d1d;
+    outline-width: 0;
+    border:rgb(233, 46, 46) 1px solid;
+    border-radius: 5px;
+    color: rgb(233, 46, 46);
+}
+
+#cancel:hover {
+    color: #1d1d1d;
+    background-color: rgb(233, 46, 46);
+    cursor: pointer;
+}

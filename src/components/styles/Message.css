@@ -1,0 +1,80 @@
+.message{
+    display: flex;
+    align-items: center;
+    color: white;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.message:hover{
+    background-color: rgb(17, 17, 17);
+}
+
+.message__info{
+    margin-left: 20px;
+    flex:0.75
+}
+
+.message__info > h5{
+    color:#119DA4;
+}
+
+.message__timestamp{
+    color: gray;
+    margin-left: 20px;
+    font-size: x-small;
+}
+
+.edit__message {
+    color: #119DA4;
+    visibility: hidden;
+    background-color:transparent;
+}
+
+.edit__message:hover{
+    cursor:pointer;
+}
+
+.delete__message {
+    color: rgb(233, 46, 46);
+    visibility: hidden;
+    background-color:transparent;
+}
+
+.delete__message:hover{
+    cursor:pointer;
+}
+
+.message__buttons {
+    flex:0.25;
+}
+
+.message:hover .edit__message {
+    visibility: visible;
+}
+
+.message:hover .delete__message {
+    visibility: visible;
+    margin-left: 10px;
+}
+
+.message:hover .message__timestamp__info {
+    visibility: visible;
+}
+
+.edit__message-input {
+    outline-width: 0;
+    color: #119DA4;
+    background-color: transparent;
+    border: 0;
+    font-size: medium;
+}
+
+.message__timestamp__info{
+    color: gray;
+    margin-left: 20px;
+    font-size: x-small;
+    visibility: hidden;
+}
